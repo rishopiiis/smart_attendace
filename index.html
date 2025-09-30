@@ -1,9 +1,17 @@
+
 <!DOCTYPE html>
 <html>
 <head>
-    <title>My Site</title>
+    <title>Smart Attendance System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h1>Hello World!</h1>
+    <div class="container">
+        <h1>Smart Attendance System</h1>
+        <div class="menu">
+            <a href="{{ url_for('register') }}" class="btn">Register Participant</a>
+            <a href="{{ url_for('admin_dashboard') }}" class="btn">Admin Dashboard</a>
+        </div>
+    </div>
 </body>
 </html>
