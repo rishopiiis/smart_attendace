@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Admin Dashboard</h1>
+        
+        <div class="stats">
+            <div class="stat-card">
+                <h3>Total Participants</h3>
+                <p>{{ stats.total }}</p>
+            </div>
+            <div class="stat-card">
+                <h3>Entered</h3>
+                <p>{{ stats.entered }}</p>
+            </div>
+            <div class="stat-card">
+                <h3>Exited</h3>
+                <p>{{ stats.exited }}</p>
+            </div>
+            <div class="stat-card">
+                <h3>Feedback Received</h3>
+                <p>{{ stats.feedback_received }}</p>
+            </div>
+        </div>
+
+        <div class="participants-list">
+            <h2>All Participants</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Phone</th>
+                        <th>Entrance ID</th>
+                        <th>Entry Time</th>
+                        <th>Exit Time</th>
+                        <th>Feedback</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for participant in participants %}
+                    <tr>
+                        <td>{{ participant.name }}</td>
+                        <td>{{ participant.phone }}</td>
+                        <td>{{ participant.entrance_id }}</td>
+                        <td>{{ participant.entry_time.strftime('%H:%M:%S') if participant.entry_time else 'Not entered' }}</td>
+                        <td>{{ participant.exit_time.strftime('%H:%M:%S') if participant.exit_time else 'Not exited' }}</td>
+                        <td>{{ 'Yes' if participant.feedback else 'No' }}</td>
+                        <td>
+                            {% if participant.has_exited %}
+                                <span class="status exited">Exited</span>
+                            {% elif participant.has_entered %}
+                                <span class="status entered">Inside</span>
+                            {% else %}
+                                <span class="status registered">Registered</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <a href="{{ url_for('index') }}" class="btn back">Back to Home</a>
+    </div>
+</body>
+</html>

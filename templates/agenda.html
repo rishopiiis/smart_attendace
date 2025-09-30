@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Event Agenda - {{ agenda.title }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='animations.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="agenda-header fade-in">
+            <h1>{{ agenda.title }}</h1>
+            <p class="event-date">{{ agenda.date }}</p>
+            <p class="event-venue">{{ agenda.venue }}</p>
+            <p class="welcome-message">Welcome, {{ participant.name }}!</p>
+        </div>
+
+        <div class="schedule-container">
+            <h2 class="slide-in-left">Event Schedule</h2>
+            <div class="timeline">
+                {% for item in agenda.schedule %}
+                <div class="timeline-item bounce-in" style="animation-delay: {{ (loop.index * 0.1)|round(1, 'floor') }}s">
+                    <div class="timeline-time">{{ item.time }}</div>
+                    <div class="timeline-content">
+                        <h3>{{ item.session }}</h3>
+                        {% if item.speaker %}
+                        <p class="speaker">By: {{ item.speaker }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="action-buttons fade-in-up" style="animation-delay: 1.5s">
+            <button onclick="recordExit()" class="btn exit-btn">Record My Exit</button>
+            <a href="{{ url_for('feedback', entrance_id=participant.entrance_id) }}" class="btn feedback-btn">Provide Feedback</a>
+        </div>
+
+        <div class="real-time-status pulse">
+            <h3>Your Status</h3>
+            <div class="status-indicators">
+                <div class="status-item {% if participant.has_entered %}completed{% endif %}">
+                    <span class="status-dot"></span>
+                    Entry Recorded
+                </div>
+                <div class="status-item {% if participant.has_exited %}completed{% endif %}">
+                    <span class="status-dot"></span>
+                    Exit Recorded
+                </div>
+                <div class="status-item {% if participant.feedback %}completed{% endif %}">
+                    <span class="status-dot"></span>
+                    Feedback Provided
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function recordExit() {
+            fetch('/record_exit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    entrance_id: '{{ participant.entrance_id }}'
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                updateStatus();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error recording exit. Please try again.');
+            });
+        }
+
+        function updateStatus() {
+            fetch('/updates/{{ participant.entrance_id }}')
+                .then(response => response.json())
+                .then(data => {
+                    // Update status indicators in real-time
+                    const statusItems = document.querySelectorAll('.status-item');
+                    statusItems[1].classList.toggle('completed', data.has_exited);
+                    statusItems[2].classList.toggle('completed', data.feedback_provided);
+                });
+        }
+
+        // Update status every 30 seconds
+        setInterval(updateStatus, 30000);
+    </script>
+</body>
+</html>

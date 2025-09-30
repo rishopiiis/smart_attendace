@@ -1,0 +1,78 @@
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>Feedback - {{ participant.name }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Conference Feedback</h1>
+        
+        {% if success %}
+        <div class="success-message">
+            <h2>Thank You!</h2>
+            <p>{{ message }}</p>
+        </div>
+        {% else %}
+        <div class="feedback-form">
+            <h2>Hello, {{ participant.name }}!</h2>
+            <p>Please share your feedback about the conference:</p>
+            
+            <form method="POST">
+                <div class="form-group">
+                    <textarea name="feedback" rows="8" placeholder="Enter your feedback here..." required></textarea>
+                </div>
+                <button type="submit" class="btn">Submit Feedback</button>
+            </form>
+        </div>
+        {% endif %}
+        
+        <a href="{{ url_for('index') }}" class="btn back">Back to Home</a>
+    </div>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Feedback - {{ participant.name }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='animations.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="feedback-header fade-in">
+            <h1>Conference Feedback</h1>
+            <p>Hello, {{ participant.name }}! We value your opinion.</p>
+        </div>
+
+        {% if error %}
+        <div class="error-message shake">
+            <h2>⚠️ Action Required</h2>
+            <p>{{ message }}</p>
+            <a href="{{ url_for('show_agenda', entrance_id=participant.entrance_id) }}" class="btn">Go to Agenda & Record Exit</a>
+        </div>
+        {% elif success %}
+        <div class="success-message bounce-in">
+            <h2>✅ Thank You!</h2>
+            <p>{{ message }}</p>
+            <div class="confetti">🎉</div>
+        </div>
+        {% else %}
+        <div class="feedback-form slide-in-up">
+            <h2>Share Your Experience</h2>
+            <p>Please tell us about your experience at the conference:</p>
+            
+            <form method="POST">
+                <div class="form-group">
+                    <textarea name="feedback" rows="8" placeholder="What did you enjoy most? Any suggestions for improvement?..." required></textarea>
+                </div>
+                <button type="submit" class="btn pulse">Submit Feedback</button>
+            </form>
+        </div>
+        {% endif %}
+        
+        <a href="{{ url_for('show_agenda', entrance_id=participant.entrance_id) }}" class="btn back">Back to Agenda</a>
+    </div>
+</body>
+</html>

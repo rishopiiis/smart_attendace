@@ -1,0 +1,87 @@
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>Invitation - {{ participant.name }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Conference Invitation</h1>
+        <div class="invitation-card">
+            <h2>{{ participant.name }}</h2>
+            <p><strong>Phone:</strong> {{ participant.phone }}</p>
+            <p><strong>Entrance ID:</strong> {{ participant.entrance_id }}</p>
+            <p><strong>Registration Time:</strong> {{ participant.registration_time.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+            
+            <div class="qr-code">
+                <img src="{{ url_for('get_qr_code', entrance_id=participant.entrance_id) }}" 
+                     alt="QR Code for {{ participant.name }}">
+                <p>Scan this QR code at entrance and exit</p>
+            </div>
+            
+            <div class="actions">
+                <button onclick="recordEntry()" class="btn">Record Entry</button>
+                <button onclick="recordExit()" class="btn exit">Record Exit</button>
+            </div>
+        </div>
+        <a href="{{ url_for('index') }}" class="btn back">Back to Home</a>
+    </div>
+
+    <script>
+        function recordEntry() {
+            fetch(`/entry/{{ participant.entrance_id }}`)
+                .then(response => response.json())
+                .then(data => alert(data.message));
+        }
+        
+        function recordExit() {
+            fetch(`/exit/{{ participant.entrance_id }}`)
+                .then(response => response.json())
+                .then(data => alert(data.message));
+        }
+    </script>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Invitation - {{ participant.name }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='animations.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1 class="fade-in">Conference Invitation</h1>
+        <div class="invitation-card slide-in-up">
+            <h2>{{ participant.name }}</h2>
+            <p><strong>Phone:</strong> {{ participant.phone }}</p>
+            <p><strong>Entrance ID:</strong> {{ participant.entrance_id }}</p>
+            <p><strong>Registration Time:</strong> {{ participant.registration_time.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+            
+            <div class="event-preview fade-in" style="animation-delay: 0.5s">
+                <h3>Event: {{ agenda.title }}</h3>
+                <p><strong>Date:</strong> {{ agenda.date }}</p>
+                <p><strong>Venue:</strong> {{ agenda.venue }}</p>
+            </div>
+            
+            <div class="qr-code bounce-in">
+                <img src="{{ url_for('get_qr_code', entrance_id=participant.entrance_id) }}" 
+                     alt="QR Code for {{ participant.name }}">
+                <p>Scan this QR code at entrance to view agenda</p>
+            </div>
+            
+            <div class="instructions fade-in-up">
+                <h4>📱 How it works:</h4>
+                <ol>
+                    <li>Scan QR at entrance to view agenda & auto-record entry</li>
+                    <li>Check your SMS for feedback link</li>
+                    <li>After event, record your exit from agenda page</li>
+                    <li>Then provide feedback using SMS link</li>
+                </ol>
+            </div>
+        </div>
+        <a href="{{ url_for('index') }}" class="btn back">Back to Home</a>
+    </div>
+</body>
+</html>
